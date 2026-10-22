@@ -1,0 +1,56 @@
+{
+  "scope": "https://api.businesscentral.dynamics.com/.default",
+  "tenant_id": "YOUR_TENANT_ID",
+  "client_id": "YOUR_CLIENT_ID",
+  "client_secret": "YOUR_CLIENT_SECRET",
+  "environment": "sandbox",
+  "company_id": "YOUR_COMPANY_ID",
+  "buyer": {
+    "sub_entities": true,
+    "sub_entity_list": [
+      {
+        "name": "shipping_addresses",
+        "endpoint": "/api/wizcommerce/connector/v1.0/companies({company_id})/wizShipToAddresses",
+        "filter_field": "customerNumber",
+        "pull": true,
+        "push": true,
+        "batch_size": 50,
+        "pagination_type": "skip"
+      },
+      {
+        "name": "price_list",
+        "endpoint": "/api/wizcommerce/connector/v1.0/companies({company_id})/wizCustomerPrices",
+        "filter_field": "customerNumber",
+        "pull": true,
+        "push": false
+      }
+    ]
+  },
+  "order": {
+    "sales_archive": {
+      "name": "sales_archive",
+      "pull": true,
+      "endpoint": "/api/wizcommerce/connector/v1.0/companies({company_id})/wizSalesOrderArchives?$expand=wizSalesOrderArchiveLines",
+      "line_item_key": "wizSalesOrderArchiveLines",
+      "pagination_type": "skip"
+    }
+  },
+  "shipment": {
+    "sub_entities": true,
+    "sub_entity_list": [
+      {
+        "name": "tracker",
+        "endpoint": "/api/wizcommerce/connector/v1.0/companies({company_id})/wizShipmentTrackings",
+        "filter_field": "shipmentNumber",
+        "pull": true,
+        "push": false
+      }
+    ]
+  },
+  "inventory": {
+    "endpoint": "/api/wizcommerce/connector/v1.0/companies({company_id})/wizItemAvailabilities",
+    "entity_filter": "itemNo",
+    "date_filter_field": "lastModifiedDateTime",
+    "reference_id_field": "itemNo"
+  }
+}

@@ -1,0 +1,13 @@
+Dynamic Fields -> Tenat wise
+
+Version need to check client wise
+
+Items dimestion type example - need to check - end to end
+
+Tenant Level Permission -> product/order/buyer api pull Permission - chanin wise permission,
+if customer off -> then why pulling contact
+
+Api limits -> rate limit and all
+
+
+

@@ -1,0 +1,22 @@
+{
+  "scope": "https://api.businesscentral.dynamics.com/.default",
+  "tenant_id": "YOUR_TENANT_ID",
+  "client_id": "YOUR_CLIENT_ID",
+  "client_secret": "YOUR_CLIENT_SECRET",
+  "environment": "sandbox",
+  "company_id": "YOUR_COMPANY_ID",
+  "buyer": {
+    "sub_entities": true,
+    "sub_entity_list": [
+      {
+        "name": "shipping_addresses",
+        "endpoint": "/api/wizcommerce/connector/v1.0/companies({company_id})/wizShipToAddresses",
+        "filter_field": "customerNumber",
+        "pull": true,
+        "push": true,
+        "batch_size": 50,
+        "pagination_type": "skip"
+      }
+    ]
+  }
+}

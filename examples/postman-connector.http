@@ -1,0 +1,49 @@
+# Replace placeholders before running.
+# Use the same OAuth client credentials as Business Central V2.
+
+@baseUrl = https://api.businesscentral.dynamics.com/v2.0/{{tenantId}}/{{environment}}
+@companyId = {{companyId}}
+@accessToken = {{accessToken}}
+
+### 1) List companies
+GET {{baseUrl}}/api/v2.0/companies
+Authorization: Bearer {{accessToken}}
+
+### 2) Ship-to addresses
+GET {{baseUrl}}/api/wizcommerce/connector/v1.0/companies({{companyId}})/wizShipToAddresses?$top=10
+Authorization: Bearer {{accessToken}}
+
+### 3) Ship-to filter by customer
+GET {{baseUrl}}/api/wizcommerce/connector/v1.0/companies({{companyId}})/wizShipToAddresses?$filter=customerNumber eq '10000'
+Authorization: Bearer {{accessToken}}
+
+### 4) POST ship-to
+POST {{baseUrl}}/api/wizcommerce/connector/v1.0/companies({{companyId}})/wizShipToAddresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "customerNumber": "10000",
+  "code": "TEST",
+  "name": "Test Warehouse",
+  "address": "123 Test Street",
+  "city": "Dallas",
+  "postalCode": "75001",
+  "country": "US"
+}
+
+### 5) Shipment tracking
+GET {{baseUrl}}/api/wizcommerce/connector/v1.0/companies({{companyId}})/wizShipmentTrackings?$top=10
+Authorization: Bearer {{accessToken}}
+
+### 6) Sales order archives + lines
+GET {{baseUrl}}/api/wizcommerce/connector/v1.0/companies({{companyId}})/wizSalesOrderArchives?$expand=wizSalesOrderArchiveLines&$top=5
+Authorization: Bearer {{accessToken}}
+
+### 7) Customer prices
+GET {{baseUrl}}/api/wizcommerce/connector/v1.0/companies({{companyId}})/wizCustomerPrices?$top=10
+Authorization: Bearer {{accessToken}}
+
+### 8) Item availabilities
+GET {{baseUrl}}/api/wizcommerce/connector/v1.0/companies({{companyId}})/wizItemAvailabilities?$top=10
+Authorization: Bearer {{accessToken}}
