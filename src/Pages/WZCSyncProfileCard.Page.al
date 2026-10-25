@@ -123,6 +123,8 @@ page 50106 "WZC Sync Profile Card"
                             Count := Engine.PreviewMatchingItemCount(Rec, SampleNos);
                         Rec.Entity::ShipToAddress:
                             Count := Engine.PreviewMatchingShipToAddressCount(Rec, SampleNos);
+                        Rec.Entity::Customer:
+                            Count := Engine.PreviewMatchingCustomerCount(Rec, SampleNos);
                         else
                             Error('Preview isn''t wired for entity %1 yet.', Rec.Entity);
                     end;

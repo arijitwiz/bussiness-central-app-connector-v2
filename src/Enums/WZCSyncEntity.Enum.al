@@ -14,4 +14,8 @@ enum 50113 "WZC Sync Entity"
     {
         Caption = 'Prices';
     }
+    value(3; Customer)
+    {
+        Caption = 'Customers';
+    }
 }

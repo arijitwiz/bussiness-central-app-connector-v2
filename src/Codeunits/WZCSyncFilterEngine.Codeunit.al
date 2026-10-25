@@ -12,9 +12,14 @@ codeunit 50114 "WZC Sync Filter Engine"
     procedure TryGetEntityForApiOperation(ApiOperation: Code[30]; var Entity: Enum "WZC Sync Entity"): Boolean
     begin
         case ApiOperation of
-            'ITEMAVAIL':
+            'ITEMAVAIL', 'ITEM', 'INVFEED', 'INVBYLOC':
                 begin
                     Entity := Entity::Product;
+                    exit(true);
+                end;
+            'CUSTOMER':
+                begin
+                    Entity := Entity::Customer;
                     exit(true);
                 end;
             'SHIPTOADDR', 'SHIPTOADDRFULL', 'SHIPTOATTR':
@@ -35,7 +40,7 @@ codeunit 50114 "WZC Sync Filter Engine"
     /// <summary>Whether the filter engine actually has an allowlist/evaluator wired for this entity yet.</summary>
     procedure IsEntityWired(Entity: Enum "WZC Sync Entity"): Boolean
     begin
-        exit(Entity in [Entity::Product, Entity::ShipToAddress]);
+        exit(Entity in [Entity::Product, Entity::ShipToAddress, Entity::Customer]);
     end;
 
     procedure ValidateProfile(var Profile: Record "WZC Sync Profile")
@@ -161,7 +166,7 @@ codeunit 50114 "WZC Sync Filter Engine"
 
     /// <summary>
     /// Builds the filtered, time-windowed result set for a profile. Entity must already
-    /// be wired (Phase 1: Product/Item only - other entities raise EntityNotWiredErr).
+    /// be wired (Product, Ship-to Address, Customer - other entities raise EntityNotWiredErr).
     /// Marks matching records on the passed-in Record variable; caller should use
     /// Item.MarkedOnly(true) afterwards. No string-built filter expressions are used -
     /// every comparison is typed, via RecordRef/FieldRef, against the allowlist.
@@ -220,6 +225,54 @@ codeunit 50114 "WZC Sync Filter Engine"
             until ShipToAddress.Next() = 0;
 
         ShipToAddress.MarkedOnly(true);
+        exit(MatchCount);
+    end;
+
+    /// <summary>Same as PreviewMatchingItemCount, for the Customer entity.</summary>
+    procedure PreviewMatchingCustomerCount(Profile: Record "WZC Sync Profile"; var SampleNos: Text): Integer
+    var
+        Customer: Record Customer;
+        Count: Integer;
+        SampleCount: Integer;
+    begin
+        Count := ApplyProfileToCustomer(Profile, 0DT, 0DT, Customer);
+        SampleNos := '';
+        SampleCount := 0;
+        if Customer.FindSet() then
+            repeat
+                if SampleCount > 0 then
+                    SampleNos += ', ';
+                SampleNos += Customer."No.";
+                SampleCount += 1;
+            until (Customer.Next() = 0) or (SampleCount >= 5);
+        exit(Count);
+    end;
+
+    /// <summary>Same as ApplyProfileToItem, for the Customer entity (e.g. Customer Price Group = RTMASTER).</summary>
+    procedure ApplyProfileToCustomer(Profile: Record "WZC Sync Profile"; LowerBound: DateTime; UpperBound: DateTime; var Customer: Record Customer): Integer
+    var
+        RecRef: RecordRef;
+        DistinctGroups: List of [Integer];
+        MatchCount: Integer;
+    begin
+        if Profile.Entity <> Profile.Entity::Customer then
+            Error(EntityNotWiredErr, Profile.Entity);
+
+        if UpperBound <> 0DT then
+            Customer.SetFilter(SystemModifiedAt, '%1..%2', LowerBound, UpperBound);
+
+        GetDistinctGroups(Profile."Profile No.", DistinctGroups);
+
+        if Customer.FindSet() then
+            repeat
+                RecRef.GetTable(Customer);
+                if RuleSetMatches(Profile.Entity, Profile."Profile No.", DistinctGroups, RecRef) then begin
+                    Customer.Mark(true);
+                    MatchCount += 1;
+                end;
+            until Customer.Next() = 0;
+
+        Customer.MarkedOnly(true);
         exit(MatchCount);
     end;
 
@@ -386,9 +439,78 @@ codeunit 50114 "WZC Sync Filter Engine"
     var
         Item: Record Item;
         ShipToAddress: Record "Ship-to Address";
+        Customer: Record Customer;
         RecRef: RecordRef;
     begin
         case Entity of
+            Entity::Customer:
+                begin
+                    RecRef.GetTable(Customer);
+                    case FieldName of
+                        'No.':
+                            begin
+                                FieldNo := Customer.FieldNo("No.");
+                                DataType := DataType::Text;
+                            end;
+                        'Name':
+                            begin
+                                FieldNo := Customer.FieldNo(Name);
+                                DataType := DataType::Text;
+                            end;
+                        'Customer Price Group':
+                            begin
+                                FieldNo := Customer.FieldNo("Customer Price Group");
+                                DataType := DataType::Text;
+                            end;
+                        'Customer Disc. Group':
+                            begin
+                                FieldNo := Customer.FieldNo("Customer Disc. Group");
+                                DataType := DataType::Text;
+                            end;
+                        'Customer Posting Group':
+                            begin
+                                FieldNo := Customer.FieldNo("Customer Posting Group");
+                                DataType := DataType::Text;
+                            end;
+                        'Gen. Bus. Posting Group':
+                            begin
+                                FieldNo := Customer.FieldNo("Gen. Bus. Posting Group");
+                                DataType := DataType::Text;
+                            end;
+                        'Blocked':
+                            begin
+                                FieldNo := Customer.FieldNo(Blocked);
+                                DataType := DataType::Option;
+                            end;
+                        'Salesperson Code':
+                            begin
+                                FieldNo := Customer.FieldNo("Salesperson Code");
+                                DataType := DataType::Text;
+                            end;
+                        'Location Code':
+                            begin
+                                FieldNo := Customer.FieldNo("Location Code");
+                                DataType := DataType::Text;
+                            end;
+                        'Country/Region Code':
+                            begin
+                                FieldNo := Customer.FieldNo("Country/Region Code");
+                                DataType := DataType::Text;
+                            end;
+                        'Currency Code':
+                            begin
+                                FieldNo := Customer.FieldNo("Currency Code");
+                                DataType := DataType::Text;
+                            end;
+                        'WZC Web Customer':
+                            begin
+                                FieldNo := Customer.FieldNo("WZC Web Customer");
+                                DataType := DataType::Boolean;
+                            end;
+                        else
+                            Error(FieldNotAllowedErr, FieldName, Entity);
+                    end;
+                end;
             Entity::ShipToAddress:
                 begin
                     RecRef.GetTable(ShipToAddress);
@@ -495,6 +617,11 @@ codeunit 50114 "WZC Sync Filter Engine"
                             begin
                                 FieldNo := Item.FieldNo("Global Dimension 2 Code");
                                 DataType := DataType::Text;
+                            end;
+                        'WZC Sell On Website':
+                            begin
+                                FieldNo := Item.FieldNo("WZC Sell On Website");
+                                DataType := DataType::Boolean;
                             end;
                         else
                             Error(FieldNotAllowedErr, FieldName, Entity);

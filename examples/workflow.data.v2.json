@@ -1,0 +1,59 @@
+{
+  "_comment": "WizCommerce integration_workflows.data pointing a tenant at the unified v2.0 WZC surface. Tenant differences (price-group gating, sellOnWebsite, field set) live in BC config (Sync Profiles, Field Visibility, Attributes) - not in this file and not in code.",
+  "scope": "https://api.businesscentral.dynamics.com/.default",
+  "tenant_id": "YOUR_TENANT_ID",
+  "client_id": "YOUR_CLIENT_ID",
+  "client_secret": "YOUR_CLIENT_SECRET",
+  "environment": "Production",
+  "company_id": "YOUR_COMPANY_ID",
+  "buyer": {
+    "has_custom_endpoint": true,
+    "endpoint": "/api/wizcommerce/connector/v2.0/companies({company_id})/wizCustomers?$expand=wizCustomerAddresses,wizCustomerContacts",
+    "custom_push_endpoint": "/api/wizcommerce/connector/v2.0/companies({company_id})/wizCustomers",
+    "reference_id_field": "number",
+    "date_filter_field": "lastModifiedDateTime",
+    "pagination_type": "nextLink",
+    "sub_entities": false
+  },
+  "product": {
+    "has_custom_endpoint": true,
+    "endpoint": "/api/wizcommerce/connector/v2.0/companies({company_id})/wizItems?$expand=wizItemPrices,wizItemVariants,wizItemUnitsOfMeasure",
+    "reference_id_field": "number",
+    "date_filter_field": "lastModifiedDateTime",
+    "pagination_type": "nextLink"
+  },
+  "inventory": {
+    "has_custom_endpoint": true,
+    "endpoint": "/api/wizcommerce/connector/v2.0/companies({company_id})/wizInventoryFeedItems?$expand=wizFutureAvailabilities",
+    "entity_filter": "itemNo",
+    "reference_id_field": "itemNo",
+    "date_filter_field": "lastModifiedDateTime",
+    "pagination_type": "nextLink"
+  },
+  "order": {
+    "endpoint": "/api/wizcommerce/connector/v2.0/companies({company_id})/wizSalesOrders?$expand=wizSalesOrderLines,wizSalesOrderDimensions",
+    "custom_push_endpoint": "/api/wizcommerce/connector/v2.0/companies({company_id})/wizSalesOrderWrites",
+    "line_item_key": "wizSalesOrderLines",
+    "reference_id_field": "number",
+    "idempotency_field": "externalId",
+    "sales_archive": {
+      "name": "sales_archive",
+      "pull": true,
+      "endpoint": "/api/wizcommerce/connector/v2.0/companies({company_id})/wizSalesOrderArchives?$expand=wizSalesOrderArchiveLines&$filter=isLatestVersion eq true",
+      "line_item_key": "wizSalesOrderArchiveLines",
+      "pagination_type": "nextLink"
+    }
+  },
+  "shipment": {
+    "sub_entities": true,
+    "sub_entity_list": [
+      {
+        "name": "tracker",
+        "endpoint": "/api/wizcommerce/connector/v1.0/companies({company_id})/wizShipmentTrackings",
+        "filter_field": "shipmentNumber",
+        "pull": true,
+        "push": false
+      }
+    ]
+  }
+}

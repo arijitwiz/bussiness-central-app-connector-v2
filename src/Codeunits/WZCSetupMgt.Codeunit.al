@@ -42,6 +42,14 @@ codeunit 50110 "WZC Setup Mgt"
         EnsureApiConfigExists('ITEMAVAIL', 'WZC Item Availability');
         EnsureApiConfigExists('SHIPTOADDRFULL', 'WZC Ship-to Address Full API');
         EnsureApiConfigExists('SHIPTOATTR', 'WZC Ship-to Attribute API');
+        // v2.0 unified entity APIs
+        EnsureApiConfigExists('CUSTOMER', 'WZC Customer API');
+        EnsureApiConfigExists('ITEM', 'WZC Item API');
+        EnsureApiConfigExists('INVFEED', 'WZC Inventory Feed API');
+        EnsureApiConfigExists('INVBYLOC', 'WZC Inventory By Location');
+        EnsureApiConfigExists('SALESORDER', 'WZC Sales Order API');
+        EnsureApiConfigExists('SALESORDERWRITE', 'WZC Sales Order Write API');
+        EnsureApiConfigExists('SALESORDERARCH', 'WZC Sales Order Archive API');
     end;
 
     local procedure GetOrCreateApiConfig(ApiName: Code[30]; FriendlyName: Text[100]; var Config: Record "WZC Api Config")

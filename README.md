@@ -10,15 +10,35 @@ Used with existing **Business Central V2** via `workflow.data` only. No V1 chang
 |---|---|
 | APIPublisher | `wizcommerce` |
 | APIGroup | `connector` |
-| APIVersion | `v1.0` |
+| APIVersion | `v1.0` (original four APIs) · `v2.0` (unified entity APIs, app 1.1.0.0+) |
 
-Base path:
+Base paths:
 
 ```
 /api/wizcommerce/connector/v1.0/companies({companyId})/
+/api/wizcommerce/connector/v2.0/companies({companyId})/
 ```
 
-## Endpoints
+## Endpoints — v2.0 unified entity APIs (one surface for every tenant)
+
+| Entity set | Source | `$expand` parts | Ops | Api Operation |
+|---|---|---|---|---|
+| `wizCustomers` | Customer | `wizCustomerAddresses`, `wizCustomerContacts` | GET, POST (idempotent on `externalId`), PATCH | `CUSTOMER` |
+| `wizItems` | Item | `wizItemPrices`, `wizItemVariants`, `wizItemUnitsOfMeasure` | GET | `ITEM` |
+| `wizInventoryFeedItems` | Item + server-side availability | `wizFutureAvailabilities` (open PO lines) | GET | `INVFEED` |
+| `wizInventoryByLocations` | Item Ledger Entry (query, per location) | — | GET | `INVBYLOC` |
+| `wizSalesOrders` | Sales Header (Order) | `wizSalesOrderLines`, `wizSalesOrderDimensions` | GET | `SALESORDER` |
+| `wizSalesOrderWrites` | Sales Header (Order) | `wizSalesOrderLines` (deep insert) | POST (idempotent on `externalId`), PATCH | `SALESORDERWRITE` |
+| `wizSalesOrderArchives` | Sales Header Archive | `wizSalesOrderArchiveLines` | GET (`$filter=isLatestVersion eq true`) | `SALESORDERARCH` |
+
+These replace the per-tenant Browne / Atlas / Art Studios namespaces (`customers?$expand=shipToAddresses`,
+`customerExtended`, `customerAddresses`, `items?$expand=priceListLines`, `itemMatrixWizCom`, `inventoryitems`,
+`inventoryFeedItems`, `salesOrderWs`, `salesorderExpandArchiveLatest`). Tenant differences are **configuration**:
+Field Visibility (field set per API), Sync Profiles (business-rule filters such as `Customer Price Group = RTMASTER`
+or `WZC Sell On Website = true`), Connector Setup (Location Filter). See `docs/BC_CONNECTOR_AL_OBJECTS.md` §6 and
+`examples/workflow.data.v2.json`.
+
+## Endpoints — v1.0 (unchanged)
 
 | Entity set | Source | Ops |
 |---|---|---|
