@@ -57,6 +57,22 @@ page 50111 "WZC Connector Setup Card"
                 RunObject = page "WZC Ship-to Attribute List";
                 ToolTip = 'Browse/edit the actual attribute values stored per address.';
             }
+            action(OpenCustomerAttributes)
+            {
+                ApplicationArea = All;
+                Caption = 'Customer Attribute Values';
+                Image = CustomerList;
+                RunObject = page "WZC Customer Attribute List";
+                ToolTip = 'Browse/edit WizCommerce custom attribute values stored per customer.';
+            }
+            action(OpenSalesOrderAttributes)
+            {
+                ApplicationArea = All;
+                Caption = 'Sales Order Attribute Values';
+                Image = Sales;
+                RunObject = page "WZC Sales Order Attribute List";
+                ToolTip = 'Browse/edit WizCommerce custom attribute values stored per sales order.';
+            }
         }
     }
 
