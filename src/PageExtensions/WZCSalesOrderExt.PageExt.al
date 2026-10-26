@@ -15,13 +15,13 @@ pageextension 50125 "WZC Sales Order Ext" extends "Sales Order"
 
     actions
     {
-        addlast("Order")
+        addlast(processing)
         {
             action(WZCSalesOrderAttributes)
             {
                 ApplicationArea = All;
                 Caption = 'WizCommerce Attributes';
-                Image = Attributes;
+                Image = Comment;
                 RunObject = page "WZC Sales Order Attribute List";
                 RunPageLink = "Document Type" = const(Order), "Document No." = field("No.");
                 ToolTip = 'View and manage WizCommerce custom attributes for this sales order.';

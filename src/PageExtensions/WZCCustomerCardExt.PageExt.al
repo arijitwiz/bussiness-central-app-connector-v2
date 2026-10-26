@@ -15,13 +15,13 @@ pageextension 50124 "WZC Customer Card Ext" extends "Customer Card"
 
     actions
     {
-        addlast("Customer")
+        addlast(processing)
         {
             action(WZCCustomerAttributes)
             {
                 ApplicationArea = All;
                 Caption = 'WizCommerce Attributes';
-                Image = Attributes;
+                Image = Comment;
                 RunObject = page "WZC Customer Attribute List";
                 RunPageLink = "Customer No." = field("No.");
                 ToolTip = 'View and manage WizCommerce custom attributes for this customer.';
