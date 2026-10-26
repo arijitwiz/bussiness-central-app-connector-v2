@@ -16,7 +16,7 @@ page 50130 "WZC Customer API"
     ModifyAllowed = true;
     DeleteAllowed = false;
     Extensible = false;
-    AboutText = 'Unified BUYER API. One call returns the customer plus its ship-to addresses and contacts via $expand=wizCustomerAddresses,wizCustomerContacts (replaces per-tenant customers?$expand=shipToAddresses / customerExtended / customerAddresses). Every text field except id/number/externalId/lastModifiedDateTime is tenant-gated through WZC Field Visibility (Api Operation = CUSTOMER). Tenant business rules (e.g. Customer Price Group = RTMASTER) come from an enabled Pull Sync Profile on CUSTOMER. POST is idempotent on externalId: repeating an external id updates the existing customer instead of creating a duplicate.';
+    AboutText = 'Unified BUYER API. Use $expand=wizCustomerAddresses,wizCustomerContacts,wizCustomerAttributes,wizCustomerPrices to pull addresses, contacts, tenant-defined custom attributes, and active customer-specific prices in one call. Every text field except id/number/externalId/lastModifiedDateTime is tenant-gated through WZC Field Visibility (Api Operation = CUSTOMER). POST is idempotent on externalId.';
 
     layout
     {
@@ -347,6 +347,27 @@ page 50130 "WZC Customer API"
                     SubPageLink = "No." = field("No.");
                     EntityName = 'wizCustomerContact';
                     EntitySetName = 'wizCustomerContacts';
+                }
+                part(wizCustomerAttributes; "WZC Customer Attr Part")
+                {
+                    Caption = 'Custom Attributes';
+                    SubPageLink = "Customer No." = field("No.");
+                    EntityName = 'wizCustomerAttribute';
+                    EntitySetName = 'wizCustomerAttributes';
+                }
+                part(wizCustomerPrices; "WZC Customer Price Part")
+                {
+                    Caption = 'Price Group Prices';
+                    SubPageLink = "Source No." = field("Customer Price Group");
+                    EntityName = 'wizCustomerPrice';
+                    EntitySetName = 'wizCustomerPrices';
+                }
+                part(wizCustomerDirectPrices; "WZC Customer Direct Price Part")
+                {
+                    Caption = 'Customer Direct Prices';
+                    SubPageLink = "Source No." = field("No.");
+                    EntityName = 'wizCustomerDirectPrice';
+                    EntitySetName = 'wizCustomerDirectPrices';
                 }
             }
         }

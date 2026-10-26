@@ -17,7 +17,7 @@ page 50139 "WZC Sales Order API"
     ModifyAllowed = false;
     DeleteAllowed = false;
     Extensible = false;
-    AboutText = 'Unified ORDER read API (pull). One call returns the order, its lines and its dimension set via $expand=wizSalesOrderLines,wizSalesOrderDimensions. Includes the WizCommerce external id and order notes written through wizSalesOrderWrites. Fields are tenant-gated through WZC Field Visibility (Api Operation = SALESORDER).';
+    AboutText = 'Unified ORDER read API (pull). Use $expand=wizSalesOrderLines,wizSalesOrderDimensions,wizSalesOrderAttributes to pull lines, dimension set, and tenant-defined order attributes in one call. Fields are tenant-gated through WZC Field Visibility (Api Operation = SALESORDER).';
 
     layout
     {
@@ -219,6 +219,13 @@ page 50139 "WZC Sales Order API"
                     SubPageLink = "Dimension Set ID" = field("Dimension Set ID");
                     EntityName = 'wizSalesOrderDimension';
                     EntitySetName = 'wizSalesOrderDimensions';
+                }
+                part(wizSalesOrderAttributes; "WZC Order Attr Part")
+                {
+                    Caption = 'Custom Attributes';
+                    SubPageLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
+                    EntityName = 'wizSalesOrderAttribute';
+                    EntitySetName = 'wizSalesOrderAttributes';
                 }
             }
         }

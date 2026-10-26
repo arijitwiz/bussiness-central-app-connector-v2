@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy WizCommerce BC extension v1.1.0.0 to the Sandbox environment.
+# Deploy WizCommerce BC extension v1.2.0.0 to the Sandbox environment.
 #
 # Usage:
 #   BC_CLIENT_SECRET="<secret>" ./scripts/deploy_to_sandbox.sh
@@ -22,7 +22,7 @@ set -euo pipefail
 TENANT_ID="aaf26c70-a831-4c8b-a0ad-35e35f29f7af"
 CLIENT_ID="8d1dd517-7ef8-4436-9989-3fd511269aca"
 ENVIRONMENT="Sandbox"
-APP_FILE="$(dirname "$0")/../WizCommerce_BusinessCentralConnector_1.1.0.0.app"
+APP_FILE="$(dirname "$0")/../WizCommerce_BusinessCentralConnector_1.2.0.0.app"
 
 if [[ -z "${BC_CLIENT_SECRET:-}" ]]; then
   echo "Error: BC_CLIENT_SECRET is not set." >&2

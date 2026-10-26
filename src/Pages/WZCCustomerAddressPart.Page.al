@@ -117,6 +117,13 @@ page 50131 "WZC Customer Address Part"
                     Caption = 'Last Modified Date Time';
                     Editable = false;
                 }
+                part(wizShipToAttributes; "WZC Ship-to Attr Part V2")
+                {
+                    Caption = 'Custom Attributes';
+                    SubPageLink = "Customer No." = field("Customer No."), "Ship-to Code" = field(Code);
+                    EntityName = 'wizShipToAttribute';
+                    EntitySetName = 'wizShipToAttributes';
+                }
             }
         }
     }
