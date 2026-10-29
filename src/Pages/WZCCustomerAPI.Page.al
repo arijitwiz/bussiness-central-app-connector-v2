@@ -16,7 +16,7 @@ page 50130 "WZC Customer API"
     ModifyAllowed = true;
     DeleteAllowed = false;
     Extensible = false;
-    AboutText = 'Unified BUYER API. Use $expand=wizCustomerAddresses,wizCustomerContacts,wizCustomerAttributes,wizCustomerPrices to pull addresses, contacts, tenant-defined custom attributes, and active customer-specific prices in one call. Every text field except id/number/externalId/lastModifiedDateTime is tenant-gated through WZC Field Visibility (Api Operation = CUSTOMER). POST is idempotent on externalId.';
+    AboutText = 'Unified BUYER API. Pull: $expand=wizCustomerAddresses($expand=wizShipToAttributes),wizCustomerContacts,wizCustomerDimensions,wizCustomerPrices,wizCustomerDirectPrices returns all standard and custom data in one call. Push: PATCH customFields JSON to write UDF/table-extension values back to BC. POST is idempotent on externalId. For dimension push use wizCustomerDimensionWrites endpoint.';
 
     layout
     {
@@ -348,12 +348,21 @@ page 50130 "WZC Customer API"
                     EntityName = 'wizCustomerContact';
                     EntitySetName = 'wizCustomerContacts';
                 }
-                part(wizCustomerAttributes; "WZC Customer Attr Part")
+                field(customFields; CustomFieldsJSON)
                 {
-                    Caption = 'Custom Attributes';
-                    SubPageLink = "Customer No." = field("No.");
-                    EntityName = 'wizCustomerAttribute';
-                    EntitySetName = 'wizCustomerAttributes';
+                    Caption = 'Custom Fields';
+
+                    trigger OnValidate()
+                    begin
+                        CustomFieldsChanged := true;
+                    end;
+                }
+                part(wizCustomerDimensions; "WZC Customer Dim Part")
+                {
+                    Caption = 'Dimensions';
+                    SubPageLink = "Table ID" = const(18), "No." = field("No.");
+                    EntityName = 'wizCustomerDimension';
+                    EntitySetName = 'wizCustomerDimensions';
                 }
                 part(wizCustomerPrices; "WZC Customer Price Part")
                 {
@@ -407,6 +416,8 @@ page 50130 "WZC Customer API"
         BufferGln: Code[13];
         BufferDim1: Code[20];
         BufferDim2: Code[20];
+        CustomFieldsJSON: Text;
+        CustomFieldsChanged: Boolean;
 
     trigger OnOpenPage()
     var
@@ -417,6 +428,8 @@ page 50130 "WZC Customer API"
     end;
 
     trigger OnAfterGetRecord()
+    var
+        RecRef: RecordRef;
     begin
         BufferName := CopyStr(ApiBase.TextIf(ApiOperationTok, 'displayName', Rec.Name), 1, MaxStrLen(BufferName));
         BufferName2 := CopyStr(ApiBase.TextIf(ApiOperationTok, 'name2', Rec."Name 2"), 1, MaxStrLen(BufferName2));
@@ -449,14 +462,16 @@ page 50130 "WZC Customer API"
         BufferGln := CopyStr(ApiBase.TextIf(ApiOperationTok, 'gln', Rec.GLN), 1, MaxStrLen(BufferGln));
         BufferDim1 := CopyStr(ApiBase.TextIf(ApiOperationTok, 'globalDimension1Code', Rec."Global Dimension 1 Code"), 1, MaxStrLen(BufferDim1));
         BufferDim2 := CopyStr(ApiBase.TextIf(ApiOperationTok, 'globalDimension2Code', Rec."Global Dimension 2 Code"), 1, MaxStrLen(BufferDim2));
+
+        RecRef.GetTable(Rec);
+        CustomFieldsJSON := ApiBase.BuildCustomFieldsJSON(RecRef);
     end;
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
         Existing: Record Customer;
+        RecRef: RecordRef;
     begin
-        // Idempotent create: a retried POST carrying an external id we already hold
-        // adopts that customer (search-before-create) instead of inserting a duplicate.
         if Rec."WZC External Id" <> '' then begin
             Existing.SetRange("WZC External Id", Rec."WZC External Id");
             if Existing.FindFirst() then begin
@@ -464,6 +479,27 @@ page 50130 "WZC Customer API"
                 exit(false);
             end;
         end;
+        if CustomFieldsChanged then begin
+            Rec.Insert(true);
+            RecRef.GetTable(Rec);
+            ApiBase.WriteCustomFieldsJSON(RecRef, CustomFieldsJSON);
+            RecRef.SetTable(Rec);
+            Rec.Modify(true);
+            exit(false);
+        end;
         exit(true);
+    end;
+
+    trigger OnModifyRecord(): Boolean
+    var
+        RecRef: RecordRef;
+    begin
+        if CustomFieldsChanged then begin
+            RecRef.GetTable(Rec);
+            ApiBase.WriteCustomFieldsJSON(RecRef, CustomFieldsJSON);
+            RecRef.SetTable(Rec);
+        end;
+        Rec.Modify(true);
+        exit(false);
     end;
 }

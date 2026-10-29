@@ -181,6 +181,18 @@ page 50133 "WZC Item API"
                     EntityName = 'wizItemUnitOfMeasure';
                     EntitySetName = 'wizItemUnitsOfMeasure';
                 }
+                field(customFields; CustomFieldsJSON)
+                {
+                    Caption = 'Custom Fields';
+                    Editable = false;
+                }
+                part(wizItemAttributes; "WZC Item Attr Mapping Part")
+                {
+                    Caption = 'Attributes';
+                    SubPageLink = "Table ID" = const(27), "No." = field("No.");
+                    EntityName = 'wizItemAttribute';
+                    EntitySetName = 'wizItemAttributes';
+                }
             }
         }
     }
@@ -189,6 +201,7 @@ page 50133 "WZC Item API"
         ApiBase: Codeunit "WZC Api Base";
         FieldMap: Dictionary of [Code[50], Integer];
         ApiOperationTok: Label 'ITEM', Locked = true;
+        CustomFieldsJSON: Text;
 
     trigger OnOpenPage()
     var
@@ -204,10 +217,10 @@ page 50133 "WZC Item API"
     var
         RecRef: RecordRef;
     begin
-        // Read-only projection: hidden fields are blanked in memory only.
         RecRef.GetTable(Rec);
         ApiBase.BlankHiddenFields(ApiOperationTok, RecRef, FieldMap);
         RecRef.SetTable(Rec);
+        CustomFieldsJSON := ApiBase.BuildCustomFieldsJSON(RecRef);
     end;
 
     local procedure BuildFieldMap()

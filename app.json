@@ -2,7 +2,7 @@
   "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
   "name": "WizCommerce for Business Central",
   "publisher": "WizCommerce",
-  "version": "1.3.0.0",
+  "version": "1.4.0.0",
   "brief": "WZC unified entity APIs for WizCommerce Business Central V2",
   "description": "One shared API surface (publisher wizcommerce, group connector) for every WizCommerce tenant: v2.0 unified BUYER (wizCustomers + addresses + contacts), PRODUCT (wizItems + prices + variants + UoM), INVENTORY (wizInventoryFeedItems with server-side availability + future supply, wizInventoryByLocations) and ORDER (wizSalesOrders read, wizSalesOrderWrites idempotent push, wizSalesOrderArchives) APIs, plus the original v1.0 ship-to address, customer price, shipment tracking and item availability APIs. Tenant behaviour is configuration (Field Visibility, Sync Profiles, Attributes), not code. Sync logic stays in WizCommerce.",
   "privacyStatement": "https://wizcommerce.com/privacy",

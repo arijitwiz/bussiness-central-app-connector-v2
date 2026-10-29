@@ -173,4 +173,91 @@ codeunit 50130 "WZC Api Base"
         if Setup."Price List Filter" <> '' then
             PriceListLine.SetRange("Price List Code", Setup."Price List Filter");
     end;
+
+    // ---------------------------------------------------------------------
+    // Custom Fields (UDF / table extension columns)
+    // ---------------------------------------------------------------------
+
+    procedure BuildCustomFieldsJSON(var RecRef: RecordRef): Text
+    var
+        FldRef: FieldRef;
+        JObj: JsonObject;
+        FldName: Text;
+        i: Integer;
+        Result: Text;
+    begin
+        for i := 1 to RecRef.FieldCount do begin
+            FldRef := RecRef.FieldIndex(i);
+            if (FldRef.Number >= 50000) and (FldRef.Class = FieldClass::Normal) then begin
+                FldName := FldRef.Name;
+                if not FldName.StartsWith('WZC') then
+                    JObj.Add(FldName, Format(FldRef.Value));
+            end;
+        end;
+        JObj.WriteTo(Result);
+        exit(Result);
+    end;
+
+    procedure WriteCustomFieldsJSON(var RecRef: RecordRef; CustomFieldsJSON: Text)
+    var
+        FldRef: FieldRef;
+        JObj: JsonObject;
+        JToken: JsonToken;
+        FldName: Text;
+        i: Integer;
+    begin
+        if (CustomFieldsJSON = '') or (CustomFieldsJSON = '{}') then
+            exit;
+        if not JObj.ReadFrom(CustomFieldsJSON) then
+            exit;
+
+        for i := 1 to RecRef.FieldCount do begin
+            FldRef := RecRef.FieldIndex(i);
+            if (FldRef.Number >= 50000) and (FldRef.Class = FieldClass::Normal) then begin
+                FldName := FldRef.Name;
+                if not FldName.StartsWith('WZC') then
+                    if JObj.Get(FldName, JToken) then
+                        SetFieldFromJsonToken(FldRef, JToken);
+            end;
+        end;
+    end;
+
+    local procedure SetFieldFromJsonToken(var FldRef: FieldRef; JToken: JsonToken)
+    var
+        JValue: JsonValue;
+        TextVal: Text;
+        DecVal: Decimal;
+        IntVal: Integer;
+        BoolVal: Boolean;
+        DateVal: Date;
+        BigIntVal: BigInteger;
+    begin
+        if not JToken.IsValue then
+            exit;
+        JValue := JToken.AsValue();
+        if JValue.IsNull then
+            exit;
+        TextVal := JValue.AsText();
+        if TextVal = '' then
+            exit;
+        case FldRef.Type of
+            FieldType::Text, FieldType::Code:
+                FldRef.Value := CopyStr(TextVal, 1, FldRef.Length);
+            FieldType::Decimal:
+                if Evaluate(DecVal, TextVal) then
+                    FldRef.Value := DecVal;
+            FieldType::Integer, FieldType::Option:
+                if Evaluate(IntVal, TextVal) then
+                    FldRef.Value := IntVal;
+            FieldType::Boolean:
+                if Evaluate(BoolVal, TextVal) then
+                    FldRef.Value := BoolVal;
+            FieldType::Date:
+                if Evaluate(DateVal, TextVal) then
+                    FldRef.Value := DateVal;
+            FieldType::BigInteger:
+                if Evaluate(BigIntVal, TextVal) then
+                    FldRef.Value := BigIntVal;
+        end;
+    end;
 }

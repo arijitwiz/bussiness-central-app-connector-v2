@@ -17,7 +17,7 @@ page 50139 "WZC Sales Order API"
     ModifyAllowed = false;
     DeleteAllowed = false;
     Extensible = false;
-    AboutText = 'Unified ORDER read API (pull). Use $expand=wizSalesOrderLines,wizSalesOrderDimensions,wizSalesOrderAttributes to pull lines, dimension set, and tenant-defined order attributes in one call. Fields are tenant-gated through WZC Field Visibility (Api Operation = SALESORDER).';
+    AboutText = 'Unified ORDER read API (pull). Use $expand=wizSalesOrderLines,wizSalesOrderDimensions to pull lines and dimension set in one call. Fields are tenant-gated through WZC Field Visibility (Api Operation = SALESORDER).';
 
     layout
     {
@@ -213,19 +213,17 @@ page 50139 "WZC Sales Order API"
                     EntityName = 'wizSalesOrderLine';
                     EntitySetName = 'wizSalesOrderLines';
                 }
+                field(customFields; CustomFieldsJSON)
+                {
+                    Caption = 'Custom Fields';
+                    Editable = false;
+                }
                 part(wizSalesOrderDimensions; "WZC Order Dimension Part")
                 {
                     Caption = 'Dimensions';
                     SubPageLink = "Dimension Set ID" = field("Dimension Set ID");
                     EntityName = 'wizSalesOrderDimension';
                     EntitySetName = 'wizSalesOrderDimensions';
-                }
-                part(wizSalesOrderAttributes; "WZC Order Attr Part")
-                {
-                    Caption = 'Custom Attributes';
-                    SubPageLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
-                    EntityName = 'wizSalesOrderAttribute';
-                    EntitySetName = 'wizSalesOrderAttributes';
                 }
             }
         }
@@ -235,6 +233,7 @@ page 50139 "WZC Sales Order API"
         ApiBase: Codeunit "WZC Api Base";
         FieldMap: Dictionary of [Code[50], Integer];
         ApiOperationTok: Label 'SALESORDER', Locked = true;
+        CustomFieldsJSON: Text;
 
     trigger OnOpenPage()
     var
@@ -251,6 +250,7 @@ page 50139 "WZC Sales Order API"
         RecRef.GetTable(Rec);
         ApiBase.BlankHiddenFields(ApiOperationTok, RecRef, FieldMap);
         RecRef.SetTable(Rec);
+        CustomFieldsJSON := ApiBase.BuildCustomFieldsJSON(RecRef);
     end;
 
     local procedure BuildFieldMap()
