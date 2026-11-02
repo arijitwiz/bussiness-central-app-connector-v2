@@ -5,12 +5,14 @@ permissionset 50100 "WZC CONNECTOR"
     Permissions =
         tabledata "Ship-to Address" = RIM,
         tabledata "Sales Shipment Header" = R,
+        tabledata "Price List Header" = R,
         tabledata "Price List Line" = R,
         tabledata Item = R,
         // v2.0 unified entity APIs
         tabledata Customer = RIM,
         tabledata Contact = R,
         tabledata "Contact Business Relation" = R,
+        tabledata "Segment Line" = R,
         tabledata "Item Variant" = R,
         tabledata "Item Unit of Measure" = R,
         tabledata "Item Ledger Entry" = R,
@@ -93,5 +95,9 @@ permissionset 50100 "WZC CONNECTOR"
         codeunit "WZC Availability Calc" = X,
         codeunit "WZC Order Write Mgt" = X,
         codeunit "WZC Upgrade" = X,
-        codeunit "WZC Entity Api Tests" = X;
+        codeunit "WZC Entity Api Tests" = X,
+        page "WZC Price List Header API" = X,
+        page "WZC Price List Line API" = X,
+        page "WZC Price Group Member API" = X,
+        page "WZC Customer Disc Price Part" = X;
 }

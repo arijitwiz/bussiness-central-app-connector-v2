@@ -378,6 +378,13 @@ page 50130 "WZC Customer API"
                     EntityName = 'wizCustomerDirectPrice';
                     EntitySetName = 'wizCustomerDirectPrices';
                 }
+                part(wizCustomerDiscPrices; "WZC Customer Disc Price Part")
+                {
+                    Caption = 'Discount Group Prices';
+                    SubPageLink = "Source No." = field("Customer Disc. Group");
+                    EntityName = 'wizCustomerDiscPrice';
+                    EntitySetName = 'wizCustomerDiscPrices';
+                }
             }
         }
     }
