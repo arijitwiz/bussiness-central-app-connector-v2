@@ -219,6 +219,8 @@ page 50162 "WZC Contract Pricing API"
         ContactBusinessRelation: Record "Contact Business Relation";
         SegmentLine: Record "Segment Line";
         CustomerRec: Record Customer;
+        PriceListLine: Record "Price List Line";
+        ProcessedContacts: Text[2048];
         Result: Text[2048];
     begin
         case Rec."Source Type" of
@@ -230,14 +232,45 @@ page 50162 "WZC Contract Pricing API"
 
             Rec."Source Type"::Contact:
                 begin
+                    // Resolve header-level contact
                     ContactBusinessRelation.SetRange("Contact No.", Rec."Source No.");
                     ContactBusinessRelation.SetRange("Link to Table", ContactBusinessRelation."Link to Table"::Customer);
                     if ContactBusinessRelation.FindSet() then
                         repeat
-                            if Result <> '' then
-                                Result += ',';
-                            Result += ContactBusinessRelation."No.";
+                            if StrPos(',' + Result + ',', ',' + ContactBusinessRelation."No." + ',') = 0 then begin
+                                if Result <> '' then
+                                    Result += ',';
+                                Result += ContactBusinessRelation."No.";
+                            end;
                         until ContactBusinessRelation.Next() = 0;
+
+                    // Also resolve line-level contact overrides
+                    PriceListLine.SetRange("Price List Code", Rec.Code);
+                    PriceListLine.SetRange("Price Type", PriceListLine."Price Type"::Sale);
+                    PriceListLine.SetRange("Asset Type", PriceListLine."Asset Type"::Item);
+                    if PriceListLine.FindSet() then
+                        repeat
+                            if (PriceListLine."Assign-to No." <> '') and
+                               (PriceListLine."Assign-to No." <> Rec."Source No.") and
+                               (StrPos(',' + ProcessedContacts + ',', ',' + PriceListLine."Assign-to No." + ',') = 0)
+                            then begin
+                                if ProcessedContacts <> '' then
+                                    ProcessedContacts += ',';
+                                ProcessedContacts += PriceListLine."Assign-to No.";
+
+                                ContactBusinessRelation.Reset();
+                                ContactBusinessRelation.SetRange("Contact No.", PriceListLine."Assign-to No.");
+                                ContactBusinessRelation.SetRange("Link to Table", ContactBusinessRelation."Link to Table"::Customer);
+                                if ContactBusinessRelation.FindSet() then
+                                    repeat
+                                        if StrPos(',' + Result + ',', ',' + ContactBusinessRelation."No." + ',') = 0 then begin
+                                            if Result <> '' then
+                                                Result += ',';
+                                            Result += ContactBusinessRelation."No.";
+                                        end;
+                                    until ContactBusinessRelation.Next() = 0;
+                            end;
+                        until PriceListLine.Next() = 0;
                     exit(Result);
                 end;
 
