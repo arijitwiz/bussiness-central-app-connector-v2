@@ -39,10 +39,9 @@ page 50162 "WZC Contract Pricing API"
                     Caption = 'Name';
                     Editable = false;
                 }
-                field(status; ContractStatus)
+                field(status; Rec.Status)
                 {
                     Caption = 'Status';
-                    Editable = false;
                 }
                 field(customerGroupType; CustomerGroupType)
                 {
@@ -96,15 +95,13 @@ page 50162 "WZC Contract Pricing API"
                 {
                     Caption = 'VAT Bus Posting Group';
                 }
-                field(scheduleStartDate; ScheduleStartDate)
+                field(scheduleStartDate; Rec."Starting Date")
                 {
                     Caption = 'Schedule Start Date';
-                    Editable = false;
                 }
-                field(scheduleEndDate; ScheduleEndDate)
+                field(scheduleEndDate; Rec."Ending Date")
                 {
                     Caption = 'Schedule End Date';
-                    Editable = false;
                 }
                 field(lastModifiedDateTime; Rec.SystemModifiedAt)
                 {
@@ -124,24 +121,18 @@ page 50162 "WZC Contract Pricing API"
 
     var
         ContractName: Text[250];
-        ContractStatus: Text[20];
         CustomerGroupType: Text[20];
         CustomerGroupIds: Text[2048];
         SourceTypeText: Text[30];
         AmountTypeText: Text[20];
-        ScheduleStartDate: Text[30];
-        ScheduleEndDate: Text[30];
 
     trigger OnAfterGetRecord()
     begin
         ContractName := BuildContractName();
-        ContractStatus := MapStatus();
         CustomerGroupType := MapCustomerGroupType();
         CustomerGroupIds := ResolveCustomerList();
         SourceTypeText := MapSourceType();
         AmountTypeText := MapAmountType();
-        ScheduleStartDate := FormatDateISO(Rec."Starting Date");
-        ScheduleEndDate := FormatDateISO(Rec."Ending Date");
     end;
 
     local procedure BuildContractName(): Text[250]
@@ -149,27 +140,6 @@ page 50162 "WZC Contract Pricing API"
         if Rec.Description <> '' then
             exit(Rec.Description);
         exit(Rec.Code);
-    end;
-
-    local procedure MapStatus(): Text[20]
-    begin
-        case Rec.Status of
-            Rec.Status::Active:
-                exit('active');
-            Rec.Status::Draft:
-                exit('draft');
-            Rec.Status::Inactive:
-                exit('inactive');
-            else
-                exit('draft');
-        end;
-    end;
-
-    local procedure FormatDateISO(DateValue: Date): Text[30]
-    begin
-        if DateValue = 0D then
-            exit('');
-        exit(Format(DateValue, 0, '<Year4>-<Month,2>-<Day,2>') + 'T00:00:00Z');
     end;
 
     local procedure MapSourceType(): Text[30]

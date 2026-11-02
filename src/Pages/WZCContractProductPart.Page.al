@@ -55,10 +55,9 @@ page 50163 "WZC Contract Product Part"
                     Caption = 'Amount Type';
                     Editable = false;
                 }
-                field(lineStatus; LineStatusText)
+                field(lineStatus; Rec.Status)
                 {
                     Caption = 'Status';
-                    Editable = false;
                 }
                 field(startQuantity; Rec."Minimum Quantity")
                 {
@@ -121,15 +120,13 @@ page 50163 "WZC Contract Product Part"
                 {
                     Caption = 'VAT Prod Posting Group';
                 }
-                field(lineStartingDate; LineStartingDate)
+                field(lineStartingDate; Rec."Starting Date")
                 {
                     Caption = 'Starting Date';
-                    Editable = false;
                 }
-                field(lineEndingDate; LineEndingDate)
+                field(lineEndingDate; Rec."Ending Date")
                 {
                     Caption = 'Ending Date';
-                    Editable = false;
                 }
                 field(lastModifiedDateTime; Rec.SystemModifiedAt)
                 {
@@ -144,18 +141,12 @@ page 50163 "WZC Contract Product Part"
         PricingType: Text[10];
         EffectivePrice: Decimal;
         AmountTypeText: Text[20];
-        LineStatusText: Text[20];
-        LineStartingDate: Text[30];
-        LineEndingDate: Text[30];
 
     trigger OnAfterGetRecord()
     begin
         PricingType := DeterminePricingType();
         EffectivePrice := CalcEffectivePrice();
         AmountTypeText := MapAmountType();
-        LineStatusText := MapLineStatus();
-        LineStartingDate := FormatDateISO(Rec."Starting Date");
-        LineEndingDate := FormatDateISO(Rec."Ending Date");
     end;
 
     local procedure DeterminePricingType(): Text[10]
@@ -199,24 +190,4 @@ page 50163 "WZC Contract Product Part"
         end;
     end;
 
-    local procedure MapLineStatus(): Text[20]
-    begin
-        case Rec.Status of
-            Rec.Status::Active:
-                exit('active');
-            Rec.Status::Draft:
-                exit('draft');
-            Rec.Status::Inactive:
-                exit('inactive');
-            else
-                exit('draft');
-        end;
-    end;
-
-    local procedure FormatDateISO(DateValue: Date): Text[30]
-    begin
-        if DateValue = 0D then
-            exit('');
-        exit(Format(DateValue, 0, '<Year4>-<Month,2>-<Day,2>') + 'T00:00:00Z');
-    end;
 }
