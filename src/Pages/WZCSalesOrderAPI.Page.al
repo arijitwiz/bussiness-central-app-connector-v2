@@ -14,10 +14,10 @@ page 50139 "WZC Sales Order API"
     ChangeTrackingAllowed = true;
     DelayedInsert = true;
     InsertAllowed = false;
-    ModifyAllowed = false;
+    ModifyAllowed = true;
     DeleteAllowed = false;
     Extensible = false;
-    AboutText = 'Unified ORDER read API (pull). Use $expand=wizSalesOrderLines,wizSalesOrderDimensions to pull lines and dimension set in one call. Fields are tenant-gated through WZC Field Visibility (Api Operation = SALESORDER).';
+    AboutText = 'Unified ORDER API. Use $expand=wizSalesOrderLines,wizSalesOrderDimensions,wizSalesOrderAttributes to pull lines, dimension set and custom attributes in one call. PATCH customFields JSON to write UDF/table-extension values back to BC. Fields are tenant-gated through WZC Field Visibility (Api Operation = SALESORDER).';
 
     layout
     {
@@ -216,7 +216,11 @@ page 50139 "WZC Sales Order API"
                 field(customFields; CustomFieldsJSON)
                 {
                     Caption = 'Custom Fields';
-                    Editable = false;
+
+                    trigger OnValidate()
+                    begin
+                        CustomFieldsChanged := true;
+                    end;
                 }
                 part(wizSalesOrderDimensions; "WZC Order Dimension Part")
                 {
@@ -224,6 +228,13 @@ page 50139 "WZC Sales Order API"
                     SubPageLink = "Dimension Set ID" = field("Dimension Set ID");
                     EntityName = 'wizSalesOrderDimension';
                     EntitySetName = 'wizSalesOrderDimensions';
+                }
+                part(wizSalesOrderAttributes; "WZC Sales Order Attr Part")
+                {
+                    Caption = 'Attributes';
+                    SubPageLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
+                    EntityName = 'wizSalesOrderAttribute';
+                    EntitySetName = 'wizSalesOrderAttributes';
                 }
             }
         }
@@ -234,6 +245,7 @@ page 50139 "WZC Sales Order API"
         FieldMap: Dictionary of [Code[50], Integer];
         ApiOperationTok: Label 'SALESORDER', Locked = true;
         CustomFieldsJSON: Text;
+        CustomFieldsChanged: Boolean;
 
     trigger OnOpenPage()
     var
@@ -251,6 +263,19 @@ page 50139 "WZC Sales Order API"
         ApiBase.BlankHiddenFields(ApiOperationTok, RecRef, FieldMap);
         RecRef.SetTable(Rec);
         CustomFieldsJSON := ApiBase.BuildCustomFieldsJSON(RecRef);
+    end;
+
+    trigger OnModifyRecord(): Boolean
+    var
+        RecRef: RecordRef;
+    begin
+        if CustomFieldsChanged then begin
+            RecRef.GetTable(Rec);
+            ApiBase.WriteCustomFieldsJSON(RecRef, CustomFieldsJSON);
+            RecRef.SetTable(Rec);
+        end;
+        Rec.Modify(true);
+        exit(false);
     end;
 
     local procedure BuildFieldMap()

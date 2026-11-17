@@ -17,7 +17,7 @@ page 50162 "WZC Contract Pricing API"
     ModifyAllowed = false;
     DeleteAllowed = false;
     Extensible = false;
-    AboutText = 'Unified contract pricing API. GET $expand=wizContractProducts returns each price list with its product lines in one call. Fields map to the integration contract structure: referenceId, name, status, customerGroupType/customerGroupIds (resolved from all 6 BC assignment types), scheduleStartDate/scheduleEndDate. Products carry pricingType (flat/tiered) and effectivePrice (after discount).';
+    AboutText = 'Unified contract pricing API. GET $expand=wizContractProducts returns each price list with its product lines in one call. Fields map to the integration contract structure: referenceId, name, status, customerGroupType/customerGroupIds (resolved from all 6 BC assignment types; customerGroupIds is an unbounded Text field with no practical limit for any real customer base). Products carry pricingType (flat/tiered) and effectivePrice (after discount).';
 
     layout
     {
@@ -122,7 +122,7 @@ page 50162 "WZC Contract Pricing API"
     var
         ContractName: Text[250];
         CustomerGroupType: Text[20];
-        CustomerGroupIds: Text[2048];
+        CustomerGroupIds: Text;
         SourceTypeText: Text[30];
         AmountTypeText: Text[20];
 
@@ -184,14 +184,18 @@ page 50162 "WZC Contract Pricing API"
         end;
     end;
 
-    local procedure ResolveCustomerList(): Text[2048]
+    /// <summary>
+    /// Resolves all 6 BC assignment types to a deduped, comma-separated list of Customer numbers.
+    /// Returns an unbounded Text so resolution can never overflow, regardless of group size.
+    /// </summary>
+    local procedure ResolveCustomerList(): Text
     var
-        ContactBusinessRelation: Record "Contact Business Relation";
         SegmentLine: Record "Segment Line";
         CustomerRec: Record Customer;
         PriceListLine: Record "Price List Line";
-        ProcessedContacts: Text[2048];
-        Result: Text[2048];
+        SeenCustomers: Dictionary of [Code[20], Boolean];
+        SeenContacts: Dictionary of [Code[20], Boolean];
+        ResultBuilder: TextBuilder;
     begin
         case Rec."Source Type" of
             Rec."Source Type"::"All Customers":
@@ -202,19 +206,10 @@ page 50162 "WZC Contract Pricing API"
 
             Rec."Source Type"::Contact:
                 begin
-                    // Resolve header-level contact
-                    ContactBusinessRelation.SetRange("Contact No.", Rec."Source No.");
-                    ContactBusinessRelation.SetRange("Link to Table", ContactBusinessRelation."Link to Table"::Customer);
-                    if ContactBusinessRelation.FindSet() then
-                        repeat
-                            if StrPos(',' + Result + ',', ',' + ContactBusinessRelation."No." + ',') = 0 then begin
-                                if Result <> '' then
-                                    Result += ',';
-                                Result += ContactBusinessRelation."No.";
-                            end;
-                        until ContactBusinessRelation.Next() = 0;
+                    // Header-level contact: every linked customer counts
+                    AddAllCustomersForContact(Rec."Source No.", SeenCustomers, ResultBuilder);
 
-                    // Also resolve line-level contact overrides
+                    // Line-level contact overrides
                     PriceListLine.SetRange("Price List Code", Rec.Code);
                     PriceListLine.SetRange("Price Type", PriceListLine."Price Type"::Sale);
                     PriceListLine.SetRange("Asset Type", PriceListLine."Asset Type"::Item);
@@ -222,26 +217,13 @@ page 50162 "WZC Contract Pricing API"
                         repeat
                             if (PriceListLine."Assign-to No." <> '') and
                                (PriceListLine."Assign-to No." <> Rec."Source No.") and
-                               (StrPos(',' + ProcessedContacts + ',', ',' + PriceListLine."Assign-to No." + ',') = 0)
+                               not SeenContacts.ContainsKey(PriceListLine."Assign-to No.")
                             then begin
-                                if ProcessedContacts <> '' then
-                                    ProcessedContacts += ',';
-                                ProcessedContacts += PriceListLine."Assign-to No.";
-
-                                ContactBusinessRelation.Reset();
-                                ContactBusinessRelation.SetRange("Contact No.", PriceListLine."Assign-to No.");
-                                ContactBusinessRelation.SetRange("Link to Table", ContactBusinessRelation."Link to Table"::Customer);
-                                if ContactBusinessRelation.FindSet() then
-                                    repeat
-                                        if StrPos(',' + Result + ',', ',' + ContactBusinessRelation."No." + ',') = 0 then begin
-                                            if Result <> '' then
-                                                Result += ',';
-                                            Result += ContactBusinessRelation."No.";
-                                        end;
-                                    until ContactBusinessRelation.Next() = 0;
+                                SeenContacts.Add(PriceListLine."Assign-to No.", true);
+                                AddAllCustomersForContact(PriceListLine."Assign-to No.", SeenCustomers, ResultBuilder);
                             end;
                         until PriceListLine.Next() = 0;
-                    exit(Result);
+                    exit(ResultBuilder.ToText());
                 end;
 
             Rec."Source Type"::Campaign:
@@ -249,17 +231,10 @@ page 50162 "WZC Contract Pricing API"
                     SegmentLine.SetRange("Campaign No.", Rec."Source No.");
                     if SegmentLine.FindSet() then
                         repeat
-                            ContactBusinessRelation.Reset();
-                            ContactBusinessRelation.SetRange("Contact No.", SegmentLine."Contact No.");
-                            ContactBusinessRelation.SetRange("Link to Table", ContactBusinessRelation."Link to Table"::Customer);
-                            if ContactBusinessRelation.FindFirst() then
-                                if StrPos(',' + Result + ',', ',' + ContactBusinessRelation."No." + ',') = 0 then begin
-                                    if Result <> '' then
-                                        Result += ',';
-                                    Result += ContactBusinessRelation."No.";
-                                end;
+                            // Matches original behavior: first linked customer per enrolled contact
+                            AddFirstCustomerForContact(SegmentLine."Contact No.", SeenCustomers, ResultBuilder);
                         until SegmentLine.Next() = 0;
-                    exit(Result);
+                    exit(ResultBuilder.ToText());
                 end;
 
             Rec."Source Type"::"Customer Price Group":
@@ -267,11 +242,9 @@ page 50162 "WZC Contract Pricing API"
                     CustomerRec.SetRange("Customer Price Group", Rec."Source No.");
                     if CustomerRec.FindSet() then
                         repeat
-                            if Result <> '' then
-                                Result += ',';
-                            Result += CustomerRec."No.";
+                            AppendCustomer(CustomerRec."No.", SeenCustomers, ResultBuilder);
                         until CustomerRec.Next() = 0;
-                    exit(Result);
+                    exit(ResultBuilder.ToText());
                 end;
 
             Rec."Source Type"::"Customer Disc. Group":
@@ -279,15 +252,46 @@ page 50162 "WZC Contract Pricing API"
                     CustomerRec.SetRange("Customer Disc. Group", Rec."Source No.");
                     if CustomerRec.FindSet() then
                         repeat
-                            if Result <> '' then
-                                Result += ',';
-                            Result += CustomerRec."No.";
+                            AppendCustomer(CustomerRec."No.", SeenCustomers, ResultBuilder);
                         until CustomerRec.Next() = 0;
-                    exit(Result);
+                    exit(ResultBuilder.ToText());
                 end;
 
             else
                 exit('');
         end;
     end;
+
+    local procedure AddAllCustomersForContact(ContactNo: Code[20]; var SeenCustomers: Dictionary of [Code[20], Boolean]; var ResultBuilder: TextBuilder)
+    var
+        ContactBusinessRelation: Record "Contact Business Relation";
+    begin
+        ContactBusinessRelation.SetRange("Contact No.", ContactNo);
+        ContactBusinessRelation.SetRange("Link to Table", ContactBusinessRelation."Link to Table"::Customer);
+        if ContactBusinessRelation.FindSet() then
+            repeat
+                AppendCustomer(ContactBusinessRelation."No.", SeenCustomers, ResultBuilder);
+            until ContactBusinessRelation.Next() = 0;
+    end;
+
+    local procedure AddFirstCustomerForContact(ContactNo: Code[20]; var SeenCustomers: Dictionary of [Code[20], Boolean]; var ResultBuilder: TextBuilder)
+    var
+        ContactBusinessRelation: Record "Contact Business Relation";
+    begin
+        ContactBusinessRelation.SetRange("Contact No.", ContactNo);
+        ContactBusinessRelation.SetRange("Link to Table", ContactBusinessRelation."Link to Table"::Customer);
+        if ContactBusinessRelation.FindFirst() then
+            AppendCustomer(ContactBusinessRelation."No.", SeenCustomers, ResultBuilder);
+    end;
+
+    local procedure AppendCustomer(CustomerNo: Code[20]; var SeenCustomers: Dictionary of [Code[20], Boolean]; var ResultBuilder: TextBuilder)
+    begin
+        if SeenCustomers.ContainsKey(CustomerNo) then
+            exit;
+        SeenCustomers.Add(CustomerNo, true);
+        if ResultBuilder.Length() > 0 then
+            ResultBuilder.Append(',');
+        ResultBuilder.Append(CustomerNo);
+    end;
+
 }

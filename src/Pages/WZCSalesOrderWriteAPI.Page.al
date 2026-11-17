@@ -270,6 +270,13 @@ page 50142 "WZC Sales Order Write API"
                     EntityName = 'wizSalesOrderLine';
                     EntitySetName = 'wizSalesOrderLines';
                 }
+                part(wizSalesOrderAttributes; "WZC Sales Order Attr Part")
+                {
+                    Caption = 'Attributes';
+                    SubPageLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
+                    EntityName = 'wizSalesOrderAttribute';
+                    EntitySetName = 'wizSalesOrderAttributes';
+                }
             }
         }
     }

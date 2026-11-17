@@ -16,7 +16,7 @@ page 50130 "WZC Customer API"
     ModifyAllowed = true;
     DeleteAllowed = false;
     Extensible = false;
-    AboutText = 'Unified BUYER API. Pull: $expand=wizCustomerAddresses($expand=wizShipToAttributes),wizCustomerContacts,wizCustomerDimensions,wizCustomerPrices,wizCustomerDirectPrices returns all standard and custom data in one call. Push: PATCH customFields JSON to write UDF/table-extension values back to BC. POST is idempotent on externalId. For dimension push use wizCustomerDimensionWrites endpoint.';
+    AboutText = 'Unified BUYER API. Pull: $expand=wizCustomerAddresses($expand=wizShipToAttributes),wizCustomerContacts,wizCustomerDimensions,wizCustomerPrices,wizCustomerDirectPrices,wizCustomerAttributes returns all standard and custom data in one call. Push: PATCH customFields JSON to write UDF/table-extension values back to BC. POST is idempotent on externalId. For dimension push use wizCustomerDimensionWrites endpoint.';
 
     layout
     {
@@ -384,6 +384,13 @@ page 50130 "WZC Customer API"
                     SubPageLink = "Source No." = field("Customer Disc. Group");
                     EntityName = 'wizCustomerDiscPrice';
                     EntitySetName = 'wizCustomerDiscPrices';
+                }
+                part(wizCustomerAttributes; "WZC Customer Attr Part")
+                {
+                    Caption = 'Attributes';
+                    SubPageLink = "Customer No." = field("No.");
+                    EntityName = 'wizCustomerAttribute';
+                    EntitySetName = 'wizCustomerAttributes';
                 }
             }
         }

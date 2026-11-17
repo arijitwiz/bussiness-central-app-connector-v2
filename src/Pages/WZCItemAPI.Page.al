@@ -13,10 +13,10 @@ page 50133 "WZC Item API"
     ChangeTrackingAllowed = true;
     DelayedInsert = true;
     InsertAllowed = false;
-    ModifyAllowed = false;
+    ModifyAllowed = true;
     DeleteAllowed = false;
     Extensible = false;
-    AboutText = 'Unified PRODUCT API. One call returns the item plus customer-aware price list lines, variants and units of measure via $expand=wizItemPrices,wizItemVariants,wizItemUnitsOfMeasure (replaces per-tenant items?$expand=priceListLines / itemMatrixWizCom?$expand=ItemPricing). Pricing is NOT the item base price - use wizItemPrices. Fields are tenant-gated through WZC Field Visibility (Api Operation = ITEM); tenant business rules (e.g. WZC Sell On Website = true) come from an enabled Pull Sync Profile on ITEM; the company Location Filter scopes inventory.';
+    AboutText = 'Unified PRODUCT API. One call returns the item plus customer-aware price list lines, variants and units of measure via $expand=wizItemPrices,wizItemVariants,wizItemUnitsOfMeasure,wizItemAttributes (replaces per-tenant items?$expand=priceListLines / itemMatrixWizCom?$expand=ItemPricing). Pricing is NOT the item base price - use wizItemPrices. PATCH customFields JSON to write UDF/table-extension values back to BC. Fields are tenant-gated through WZC Field Visibility (Api Operation = ITEM); tenant business rules (e.g. WZC Sell On Website = true) come from an enabled Pull Sync Profile on ITEM; the company Location Filter scopes inventory.';
 
     layout
     {
@@ -184,7 +184,11 @@ page 50133 "WZC Item API"
                 field(customFields; CustomFieldsJSON)
                 {
                     Caption = 'Custom Fields';
-                    Editable = false;
+
+                    trigger OnValidate()
+                    begin
+                        CustomFieldsChanged := true;
+                    end;
                 }
                 part(wizItemAttributes; "WZC Item Attr Mapping Part")
                 {
@@ -202,6 +206,7 @@ page 50133 "WZC Item API"
         FieldMap: Dictionary of [Code[50], Integer];
         ApiOperationTok: Label 'ITEM', Locked = true;
         CustomFieldsJSON: Text;
+        CustomFieldsChanged: Boolean;
 
     trigger OnOpenPage()
     var
@@ -221,6 +226,19 @@ page 50133 "WZC Item API"
         ApiBase.BlankHiddenFields(ApiOperationTok, RecRef, FieldMap);
         RecRef.SetTable(Rec);
         CustomFieldsJSON := ApiBase.BuildCustomFieldsJSON(RecRef);
+    end;
+
+    trigger OnModifyRecord(): Boolean
+    var
+        RecRef: RecordRef;
+    begin
+        if CustomFieldsChanged then begin
+            RecRef.GetTable(Rec);
+            ApiBase.WriteCustomFieldsJSON(RecRef, CustomFieldsJSON);
+            RecRef.SetTable(Rec);
+        end;
+        Rec.Modify(true);
+        exit(false);
     end;
 
     local procedure BuildFieldMap()
