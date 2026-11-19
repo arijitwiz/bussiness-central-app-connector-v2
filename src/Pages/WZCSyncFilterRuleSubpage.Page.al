@@ -1,4 +1,4 @@
-page 50107 "WZC Sync Filter Rule Subpage"
+page 73734357 "WZC Sync Filter Rule Subpage"
 {
     PageType = ListPart;
     SourceTable = "WZC Sync Filter Rule";

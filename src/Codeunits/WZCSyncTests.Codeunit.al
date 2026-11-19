@@ -1,4 +1,4 @@
-codeunit 50116 "WZC Sync Tests"
+codeunit 73734366 "WZC Sync Tests"
 {
     Subtype = Test;
 

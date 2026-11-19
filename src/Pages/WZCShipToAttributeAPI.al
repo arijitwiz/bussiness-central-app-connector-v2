@@ -1,4 +1,4 @@
-page 50114 "WZC Ship-to Attribute API"
+page 73734364 "WZC Ship-to Attribute API"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

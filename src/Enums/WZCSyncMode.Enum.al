@@ -1,4 +1,4 @@
-enum 50114 "WZC Sync Mode"
+enum 73734364 "WZC Sync Mode"
 {
     Extensible = false;
 

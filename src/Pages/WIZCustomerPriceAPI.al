@@ -1,4 +1,4 @@
-page 50102 "WZC Customer Price API"
+page 73734352 "WZC Customer Price API"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

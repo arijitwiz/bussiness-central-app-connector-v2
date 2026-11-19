@@ -1,4 +1,4 @@
-page 50154 "WZC Item Attr Mapping Part"
+page 73734404 "WZC Item Attr Mapping Part"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

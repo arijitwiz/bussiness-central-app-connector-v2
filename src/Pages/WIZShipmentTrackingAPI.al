@@ -1,4 +1,4 @@
-page 50101 "WZC Shipment Tracking API"
+page 73734351 "WZC Shipment Tracking API"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

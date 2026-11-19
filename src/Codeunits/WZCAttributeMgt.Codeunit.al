@@ -1,4 +1,4 @@
-codeunit 50112 "WZC Attribute Mgt"
+codeunit 73734362 "WZC Attribute Mgt"
 {
     var
         TenantNameAlreadyUsedErr: Label 'Attribute name ''%1'' is already mapped to logical attribute ''%2''. Choose a different name or edit that mapping instead.';

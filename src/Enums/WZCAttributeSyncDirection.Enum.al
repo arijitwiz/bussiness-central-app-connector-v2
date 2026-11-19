@@ -1,4 +1,4 @@
-enum 50111 "WZC Attribute Sync Direction"
+enum 73734361 "WZC Attribute Sync Direction"
 {
     Extensible = false;
 

@@ -1,4 +1,4 @@
-page 50115 "WZC Ship-to Attribute List"
+page 73734365 "WZC Ship-to Attribute List"
 {
     PageType = List;
     SourceTable = "WZC Ship-to Attribute";

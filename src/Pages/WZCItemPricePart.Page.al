@@ -1,4 +1,4 @@
-page 50134 "WZC Item Price Part"
+page 73734384 "WZC Item Price Part"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

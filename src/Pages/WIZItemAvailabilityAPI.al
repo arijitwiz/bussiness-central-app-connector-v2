@@ -1,4 +1,4 @@
-page 50103 "WZC Item Availability"
+page 73734353 "WZC Item Availability"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

@@ -1,4 +1,4 @@
-table 50117 "WZC Attribute Mapping"
+table 73734367 "WZC Attribute Mapping"
 {
     DataClassification = CustomerContent;
     Caption = 'WizCommerce Attribute Mapping';

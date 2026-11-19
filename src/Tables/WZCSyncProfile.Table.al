@@ -1,4 +1,4 @@
-table 50114 "WZC Sync Profile"
+table 73734364 "WZC Sync Profile"
 {
     DataClassification = CustomerContent;
     Caption = 'WizCommerce Sync Profile';

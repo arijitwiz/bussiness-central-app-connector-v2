@@ -1,4 +1,4 @@
-page 50116 "WZC Api Config List"
+page 73734366 "WZC Api Config List"
 {
     PageType = List;
     SourceTable = "WZC Api Config";

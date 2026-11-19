@@ -1,4 +1,4 @@
-enum 50117 "WZC Sync Run Status"
+enum 73734367 "WZC Sync Run Status"
 {
     Extensible = false;
 

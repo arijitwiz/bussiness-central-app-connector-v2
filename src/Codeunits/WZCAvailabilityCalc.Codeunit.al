@@ -1,4 +1,4 @@
-codeunit 50131 "WZC Availability Calc"
+codeunit 73734381 "WZC Availability Calc"
 {
     /// <summary>
     /// Server-side availability math. Replaces the WizCommerce-side computation that pulled

@@ -1,4 +1,4 @@
-table 50116 "WZC Sync Checkpoint"
+table 73734366 "WZC Sync Checkpoint"
 {
     DataClassification = SystemMetadata;
     Caption = 'WizCommerce Sync Checkpoint';

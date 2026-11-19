@@ -1,4 +1,4 @@
-table 50121 "WZC Field Visibility"
+table 73734371 "WZC Field Visibility"
 {
     DataClassification = CustomerContent;
     Caption = 'WizCommerce Field Visibility';

@@ -1,4 +1,4 @@
-pageextension 50124 "WZC Customer Card Ext" extends "Customer Card"
+pageextension 73734374 "WZC Customer Card Ext" extends "Customer Card"
 {
     layout
     {

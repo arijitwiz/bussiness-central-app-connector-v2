@@ -1,4 +1,4 @@
-codeunit 50111 "WZC Install"
+codeunit 73734361 "WZC Install"
 {
     Subtype = Install;
 

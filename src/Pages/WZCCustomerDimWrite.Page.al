@@ -1,4 +1,4 @@
-page 50156 "WZC Customer Dim Write"
+page 73734406 "WZC Customer Dim Write"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

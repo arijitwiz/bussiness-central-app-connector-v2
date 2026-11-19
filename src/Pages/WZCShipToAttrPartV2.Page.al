@@ -1,4 +1,4 @@
-page 50147 "WZC Ship-to Attr Part V2"
+page 73734397 "WZC Ship-to Attr Part V2"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

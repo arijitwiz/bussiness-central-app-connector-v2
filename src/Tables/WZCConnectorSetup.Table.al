@@ -1,4 +1,4 @@
-table 50110 "WZC Connector Setup"
+table 73734360 "WZC Connector Setup"
 {
     DataClassification = SystemMetadata;
     Caption = 'WizCommerce Connector Setup';

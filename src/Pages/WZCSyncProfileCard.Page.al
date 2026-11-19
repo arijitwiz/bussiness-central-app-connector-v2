@@ -1,4 +1,4 @@
-page 50106 "WZC Sync Profile Card"
+page 73734356 "WZC Sync Profile Card"
 {
     PageType = Card;
     SourceTable = "WZC Sync Profile";

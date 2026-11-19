@@ -1,14 +1,14 @@
-tableextension 50111 "WZC Customer Ext" extends Customer
+tableextension 73734361 "WZC Customer Ext" extends Customer
 {
     fields
     {
-        field(50100; "WZC External Id"; Code[50])
+        field(73734350; "WZC External Id"; Code[50])
         {
             Caption = 'WZC External Id';
             DataClassification = CustomerContent;
             ToolTip = 'WizCommerce buyer id. Used as the idempotency key for buyer push: a POST that repeats an existing external id updates that customer instead of creating a duplicate.';
         }
-        field(50101; "WZC Web Customer"; Boolean)
+        field(73734351; "WZC Web Customer"; Boolean)
         {
             Caption = 'WZC Web Customer';
             DataClassification = CustomerContent;

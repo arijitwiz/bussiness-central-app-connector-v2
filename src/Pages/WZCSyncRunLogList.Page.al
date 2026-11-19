@@ -1,4 +1,4 @@
-page 50109 "WZC Sync Run Log List"
+page 73734359 "WZC Sync Run Log List"
 {
     PageType = List;
     SourceTable = "WZC Sync Run Log";

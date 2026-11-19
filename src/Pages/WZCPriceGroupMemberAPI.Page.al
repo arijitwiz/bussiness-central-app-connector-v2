@@ -1,4 +1,4 @@
-page 50160 "WZC Price Group Member API"
+page 73734410 "WZC Price Group Member API"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';
@@ -52,4 +52,13 @@ page 50160 "WZC Price Group Member API"
             }
         }
     }
+
+    var
+        SetupMgt: Codeunit "WZC Setup Mgt";
+        ApiOperationTok: Label 'PRICEGROUPMEMBER', Locked = true;
+
+    trigger OnOpenPage()
+    begin
+        SetupMgt.EnforceApiAccess(ApiOperationTok, 'WZC Price Group Member API');
+    end;
 }

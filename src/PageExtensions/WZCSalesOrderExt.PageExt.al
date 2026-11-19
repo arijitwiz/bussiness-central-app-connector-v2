@@ -1,4 +1,4 @@
-pageextension 50125 "WZC Sales Order Ext" extends "Sales Order"
+pageextension 73734375 "WZC Sales Order Ext" extends "Sales Order"
 {
     layout
     {

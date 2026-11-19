@@ -1,4 +1,4 @@
-page 50144 "WZC Sales Order Arch Line Part"
+page 73734394 "WZC Sales Order Arch Line Part"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

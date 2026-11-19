@@ -1,4 +1,4 @@
-page 50121 "WZC Attribute Change Log"
+page 73734371 "WZC Attribute Change Log"
 {
     PageType = List;
     SourceTable = "WZC Attribute Change Log";

@@ -1,4 +1,4 @@
-codeunit 50133 "WZC Upgrade"
+codeunit 73734383 "WZC Upgrade"
 {
     Subtype = Upgrade;
 

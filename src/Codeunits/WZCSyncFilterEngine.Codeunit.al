@@ -1,4 +1,4 @@
-codeunit 50114 "WZC Sync Filter Engine"
+codeunit 73734364 "WZC Sync Filter Engine"
 {
     var
         FieldNotAllowedErr: Label 'Field ''%1'' is not in the allowlist for entity %2.';

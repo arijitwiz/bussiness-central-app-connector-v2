@@ -1,4 +1,4 @@
-page 50162 "WZC Contract Pricing API"
+page 73734412 "WZC Contract Pricing API"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';
@@ -120,11 +120,18 @@ page 50162 "WZC Contract Pricing API"
     }
 
     var
+        SetupMgt: Codeunit "WZC Setup Mgt";
+        ApiOperationTok: Label 'CONTRACTPRICING', Locked = true;
         ContractName: Text[250];
         CustomerGroupType: Text[20];
         CustomerGroupIds: Text;
         SourceTypeText: Text[30];
         AmountTypeText: Text[20];
+
+    trigger OnOpenPage()
+    begin
+        SetupMgt.EnforceApiAccess(ApiOperationTok, 'WZC Contract Pricing API');
+    end;
 
     trigger OnAfterGetRecord()
     begin

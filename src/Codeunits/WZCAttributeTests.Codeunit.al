@@ -1,4 +1,4 @@
-codeunit 50113 "WZC Attribute Tests"
+codeunit 73734363 "WZC Attribute Tests"
 {
     Subtype = Test;
 

@@ -1,4 +1,4 @@
-page 50122 "WZC Field Visibility List"
+page 73734372 "WZC Field Visibility List"
 {
     PageType = List;
     SourceTable = "WZC Field Visibility";

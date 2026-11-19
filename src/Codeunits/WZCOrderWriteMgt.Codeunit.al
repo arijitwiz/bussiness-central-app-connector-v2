@@ -1,4 +1,4 @@
-codeunit 50132 "WZC Order Write Mgt"
+codeunit 73734382 "WZC Order Write Mgt"
 {
     /// <summary>
     /// Business logic behind the WZC Sales Order Write API: idempotent create keyed on the

@@ -1,4 +1,4 @@
-page 50111 "WZC Connector Setup Card"
+page 73734361 "WZC Connector Setup Card"
 {
     PageType = Card;
     SourceTable = "WZC Connector Setup";

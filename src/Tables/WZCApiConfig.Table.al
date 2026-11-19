@@ -1,4 +1,4 @@
-table 50112 "WZC Api Config"
+table 73734362 "WZC Api Config"
 {
     DataClassification = SystemMetadata;
     Caption = 'WizCommerce Connector API Configuration';

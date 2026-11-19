@@ -1,13 +1,13 @@
-tableextension 50110 "WZC Ship-to Address Ext" extends "Ship-to Address"
+tableextension 73734360 "WZC Ship-to Address Ext" extends "Ship-to Address"
 {
     fields
     {
-        field(50100; "WZC Create Address"; Boolean)
+        field(73734350; "WZC Create Address"; Boolean)
         {
             Caption = 'WZC Create Address';
             DataClassification = CustomerContent;
         }
-        field(50101; "WZC Delivery Instructions"; Text[250])
+        field(73734351; "WZC Delivery Instructions"; Text[250])
         {
             Caption = 'WZC Delivery Instructions';
             DataClassification = CustomerContent;

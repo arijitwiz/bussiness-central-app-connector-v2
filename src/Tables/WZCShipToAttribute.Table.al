@@ -1,4 +1,4 @@
-table 50113 "WZC Ship-to Attribute"
+table 73734363 "WZC Ship-to Attribute"
 {
     DataClassification = CustomerContent;
     Caption = 'WizCommerce Ship-to Address Attribute';

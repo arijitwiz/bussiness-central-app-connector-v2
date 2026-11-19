@@ -1,4 +1,4 @@
-query 50130 "WZC Inventory By Location"
+query 73734380 "WZC Inventory By Location"
 {
     QueryType = API;
     APIPublisher = 'wizcommerce';

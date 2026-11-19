@@ -1,4 +1,4 @@
-codeunit 50134 "WZC Entity Api Tests"
+codeunit 73734384 "WZC Entity Api Tests"
 {
     Subtype = Test;
 

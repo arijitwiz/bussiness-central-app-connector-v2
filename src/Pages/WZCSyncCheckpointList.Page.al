@@ -1,4 +1,4 @@
-page 50108 "WZC Sync Checkpoint List"
+page 73734358 "WZC Sync Checkpoint List"
 {
     PageType = List;
     SourceTable = "WZC Sync Checkpoint";

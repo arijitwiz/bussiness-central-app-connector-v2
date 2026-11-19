@@ -1,4 +1,4 @@
-page 50157 "WZC Item Attr Write"
+page 73734407 "WZC Item Attr Write"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

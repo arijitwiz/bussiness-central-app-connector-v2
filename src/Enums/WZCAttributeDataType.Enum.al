@@ -1,4 +1,4 @@
-enum 50110 "WZC Attribute Data Type"
+enum 73734360 "WZC Attribute Data Type"
 {
     Extensible = true;
 

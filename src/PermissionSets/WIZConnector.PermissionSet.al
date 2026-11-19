@@ -1,4 +1,4 @@
-permissionset 50100 "WZC CONNECTOR"
+permissionset 73734350 "WZC CONNECTOR"
 {
     Assignable = true;
     Caption = 'WizCommerce Connector';
@@ -119,5 +119,7 @@ permissionset 50100 "WZC CONNECTOR"
         page "WZC Item Attr Write" = X,
         page "WZC Ship-to Attr Part V2" = X,
         page "WZC Contract Pricing API" = X,
-        page "WZC Contract Product Part" = X;
+        page "WZC Contract Product Part" = X,
+        page "WZC Ship-to Attr Part" = X,
+        page "WZC Ship-to Attr Part V2" = X;
 }

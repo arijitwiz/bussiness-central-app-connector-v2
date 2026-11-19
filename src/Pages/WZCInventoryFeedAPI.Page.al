@@ -1,4 +1,4 @@
-page 50137 "WZC Inventory Feed API"
+page 73734387 "WZC Inventory Feed API"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

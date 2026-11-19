@@ -1,4 +1,4 @@
-page 50158 "WZC Price List Header API"
+page 73734408 "WZC Price List Header API"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';
@@ -92,8 +92,15 @@ page 50158 "WZC Price List Header API"
     }
 
     var
+        SetupMgt: Codeunit "WZC Setup Mgt";
+        ApiOperationTok: Label 'PRICELISTHEADER', Locked = true;
         CustomerNo: Code[20];
         CustomerList: Text[2048];
+
+    trigger OnOpenPage()
+    begin
+        SetupMgt.EnforceApiAccess(ApiOperationTok, 'WZC Price List Header API');
+    end;
 
     trigger OnAfterGetRecord()
     begin

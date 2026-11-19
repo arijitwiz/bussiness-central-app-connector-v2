@@ -1,4 +1,4 @@
-page 50120 "WZC Attribute Setup Wizard"
+page 73734370 "WZC Attribute Setup Wizard"
 {
     PageType = NavigatePage;
     SourceTable = "WZC Attribute Mapping";

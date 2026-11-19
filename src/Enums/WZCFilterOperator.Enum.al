@@ -1,4 +1,4 @@
-enum 50115 "WZC Filter Operator"
+enum 73734365 "WZC Filter Operator"
 {
     Extensible = false;
 

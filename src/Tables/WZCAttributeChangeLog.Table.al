@@ -1,4 +1,4 @@
-table 50118 "WZC Attribute Change Log"
+table 73734368 "WZC Attribute Change Log"
 {
     DataClassification = SystemMetadata;
     Caption = 'WizCommerce Attribute Change Log';

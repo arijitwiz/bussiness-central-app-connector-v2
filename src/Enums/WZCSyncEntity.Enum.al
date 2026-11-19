@@ -1,4 +1,4 @@
-enum 50113 "WZC Sync Entity"
+enum 73734363 "WZC Sync Entity"
 {
     Extensible = true;
 

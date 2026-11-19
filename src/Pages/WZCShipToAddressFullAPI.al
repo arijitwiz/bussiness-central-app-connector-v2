@@ -1,4 +1,4 @@
-page 50104 "WZC Ship-to Address Full API"
+page 73734354 "WZC Ship-to Address Full API"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

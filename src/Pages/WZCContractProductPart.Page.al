@@ -1,4 +1,4 @@
-page 50163 "WZC Contract Product Part"
+page 73734413 "WZC Contract Product Part"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

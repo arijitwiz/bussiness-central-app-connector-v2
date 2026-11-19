@@ -1,4 +1,4 @@
-page 50136 "WZC Item UoM Part"
+page 73734386 "WZC Item UoM Part"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

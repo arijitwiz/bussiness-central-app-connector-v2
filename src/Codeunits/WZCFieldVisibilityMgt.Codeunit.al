@@ -1,4 +1,4 @@
-codeunit 50117 "WZC Field Visibility Mgt"
+codeunit 73734367 "WZC Field Visibility Mgt"
 {
     /// <summary>
     /// Tenant-wise field-level response control, per API. Default (no rows configured

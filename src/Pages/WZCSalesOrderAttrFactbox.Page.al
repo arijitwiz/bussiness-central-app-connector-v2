@@ -1,4 +1,4 @@
-page 50153 "WZC Sales Order Attr Factbox"
+page 73734403 "WZC Sales Order Attr Factbox"
 {
     PageType = ListPart;
     SourceTable = "WZC Sales Order Attribute";

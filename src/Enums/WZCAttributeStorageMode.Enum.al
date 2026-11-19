@@ -1,4 +1,4 @@
-enum 50112 "WZC Attribute Storage Mode"
+enum 73734362 "WZC Attribute Storage Mode"
 {
     Extensible = false;
 

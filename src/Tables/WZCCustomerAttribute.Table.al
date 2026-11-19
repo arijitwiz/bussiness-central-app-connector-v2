@@ -1,4 +1,4 @@
-table 50122 "WZC Customer Attribute"
+table 73734372 "WZC Customer Attribute"
 {
     DataClassification = CustomerContent;
     Caption = 'WizCommerce Customer Attribute';

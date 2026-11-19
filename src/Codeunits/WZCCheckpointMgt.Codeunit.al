@@ -1,4 +1,4 @@
-codeunit 50115 "WZC Checkpoint Mgt"
+codeunit 73734365 "WZC Checkpoint Mgt"
 {
     var
         AlreadyRunningErr: Label 'Profile ''%1'' already has a sync run in progress (started %2). Wait for it to finish, or use Reset Checkpoint if you''re certain it''s stuck.';

@@ -1,4 +1,4 @@
-page 50161 "WZC Customer Disc Price Part"
+page 73734411 "WZC Customer Disc Price Part"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

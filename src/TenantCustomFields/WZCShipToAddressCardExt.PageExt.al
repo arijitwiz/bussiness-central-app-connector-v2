@@ -1,4 +1,4 @@
-pageextension 50123 "WZC Ship-to Address Card Ext" extends "Ship-to Address"
+pageextension 73734373 "WZC Ship-to Address Card Ext" extends "Ship-to Address"
 {
     layout
     {

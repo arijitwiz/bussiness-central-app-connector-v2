@@ -1,4 +1,4 @@
-codeunit 50130 "WZC Api Base"
+codeunit 73734380 "WZC Api Base"
 {
     /// <summary>
     /// Shared helpers for every WZC API page/query. Keeps the pages themselves to pure

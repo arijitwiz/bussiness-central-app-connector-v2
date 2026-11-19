@@ -1,4 +1,4 @@
-page 50119 "WZC Attribute Setup"
+page 73734369 "WZC Attribute Setup"
 {
     PageType = List;
     SourceTable = "WZC Attribute Mapping";

@@ -1,4 +1,4 @@
-codeunit 50110 "WZC Setup Mgt"
+codeunit 73734360 "WZC Setup Mgt"
 {
     procedure GetSetup(var Setup: Record "WZC Connector Setup")
     begin
@@ -50,6 +50,12 @@ codeunit 50110 "WZC Setup Mgt"
         EnsureApiConfigExists('SALESORDER', 'WZC Sales Order API');
         EnsureApiConfigExists('SALESORDERWRITE', 'WZC Sales Order Write API');
         EnsureApiConfigExists('SALESORDERARCH', 'WZC Sales Order Archive API');
+        EnsureApiConfigExists('CUSTOMERDIMWRITE', 'WZC Customer Dim Write');
+        EnsureApiConfigExists('ITEMATTRIBUTEWRITE', 'WZC Item Attr Write');
+        EnsureApiConfigExists('PRICELISTHEADER', 'WZC Price List Header API');
+        EnsureApiConfigExists('PRICELISTLINE', 'WZC Price List Line API');
+        EnsureApiConfigExists('PRICEGROUPMEMBER', 'WZC Price Group Member API');
+        EnsureApiConfigExists('CONTRACTPRICING', 'WZC Contract Pricing API');
     end;
 
     local procedure GetOrCreateApiConfig(ApiName: Code[30]; FriendlyName: Text[100]; var Config: Record "WZC Api Config")

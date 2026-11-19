@@ -1,4 +1,4 @@
-enum 50116 "WZC Sync Field Data Type"
+enum 73734366 "WZC Sync Field Data Type"
 {
     Extensible = false;
 

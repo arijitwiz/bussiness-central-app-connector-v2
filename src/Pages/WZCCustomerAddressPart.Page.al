@@ -1,4 +1,4 @@
-page 50131 "WZC Customer Address Part"
+page 73734381 "WZC Customer Address Part"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

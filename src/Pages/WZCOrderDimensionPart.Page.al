@@ -1,4 +1,4 @@
-page 50141 "WZC Order Dimension Part"
+page 73734391 "WZC Order Dimension Part"
 {
     PageType = API;
     APIPublisher = 'wizcommerce';

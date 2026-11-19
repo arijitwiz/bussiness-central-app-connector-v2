@@ -1,4 +1,4 @@
-table 50115 "WZC Sync Filter Rule"
+table 73734365 "WZC Sync Filter Rule"
 {
     DataClassification = CustomerContent;
     Caption = 'WizCommerce Sync Filter Rule';

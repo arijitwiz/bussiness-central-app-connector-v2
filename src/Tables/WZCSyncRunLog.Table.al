@@ -1,4 +1,4 @@
-table 50119 "WZC Sync Run Log"
+table 73734369 "WZC Sync Run Log"
 {
     DataClassification = SystemMetadata;
     Caption = 'WizCommerce Sync Run Log';

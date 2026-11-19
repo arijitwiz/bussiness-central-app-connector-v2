@@ -1,4 +1,4 @@
-page 50150 "WZC Customer Attribute List"
+page 73734400 "WZC Customer Attribute List"
 {
     PageType = List;
     SourceTable = "WZC Customer Attribute";

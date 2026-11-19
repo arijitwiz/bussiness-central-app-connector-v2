@@ -1,4 +1,4 @@
-table 50120 "WZC Api Rate State"
+table 73734370 "WZC Api Rate State"
 {
     DataClassification = SystemMetadata;
     Caption = 'WizCommerce API Rate State';
